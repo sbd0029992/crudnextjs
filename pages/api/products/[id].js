@@ -6,6 +6,10 @@ export default async function handler(req, res) {
       return await getProduct(req, res);
     case "DELETE":
       return await deleteProduct(req, res);
+    case "PUT":
+      return await updateProduct(req, res);
+    default:
+      return res.status(405).json({ message: "Method not allowed" });
   }
 }
 
@@ -23,4 +27,18 @@ const deleteProduct = async (req, res) => {
   console.log(result);
 
   return res.status(204).json();
+};
+
+const updateProduct = async (req, res) => {
+  const { id } = req.query;
+  const { name, description, price } = req.body;
+  try {
+    await pool.query(
+      "UPDATE product SET name = ?, description = ?, price = ? WHERE id = ?",
+      [name, description, price, id]
+    );
+    return res.status(204).json();
+  } catch (error) {
+    console.log(error.message);
+  }
 };
