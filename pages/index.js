@@ -2,23 +2,26 @@ import React from "react";
 import { ProductForm } from "../components/ProductForm";
 import axios from "axios";
 import Layout from "../components/Layout";
-import Link from "next/link";
+import { ProductCard } from "../components/ProductCard";
 
 function HomePage({ products }) {
-  console.log(products);
+  const renderProducts = () => {
+    if (products.length === 0) {
+      return (
+        <h1 className="text-center text-2xl font-bold">No products yet</h1>
+      );
+    }
+
+    return products.map((product) => (
+      <ProductCard key={product.id} product={product} />
+    ));
+  };
+
   return (
     <Layout>
-      {products.map((product) => (
-        <Link href={`/products/${product.id}`} key={product.id}>
-          <a>
-            <div className="border border-gray-200 shadow-md p-6">
-              <h3>{product.name}</h3>
-              <p>{product.description}</p>
-              <p>{product.price}</p>
-            </div>
-          </a>
-        </Link>
-      ))}
+      <div className="gap-4 grid grid-cols-1 md:grid-cols-3">
+        {renderProducts()}
+      </div>
     </Layout>
   );
 }
